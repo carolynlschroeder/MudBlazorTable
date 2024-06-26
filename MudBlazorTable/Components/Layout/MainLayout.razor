@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider />
+
+<MudLayout>
+    <AppBar OnSidebarToggled="@SideBarToggledHandler" />
+    <DrawerMenu Open="@toggle" />
+    <MudMainContent Class="pt-16 px-16">
+        <MudContainer Class="mt-6">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code{
+    private bool toggle = false;
+
+    void SideBarToggledHandler()
+    {
+        toggle = !toggle;
+    }
+}

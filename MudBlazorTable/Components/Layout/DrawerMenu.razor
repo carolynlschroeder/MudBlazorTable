@@ -1,0 +1,13 @@
+﻿<MudDrawer @bind-Open="@Open" Elevation="1">
+    <MudNavMenu>
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+        <MudNavLink Href="/counter" Icon="@Icons.Material.Filled.CropSquare">Counter</MudNavLink>
+        <MudNavLink Href="/weather" Icon="@Icons.Material.Filled.AlignHorizontalRight">Weather</MudNavLink>
+        <MudNavLink Href="/persons" Icon="@Icons.Material.Filled.Person">Persons</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    [Parameter]
+    public bool Open { get; set; }
+}
