@@ -20,6 +20,20 @@ namespace MudBlazorTable.Repositories
             using var context = new ApplicationDbContext();
             return context.Persons.ToList();
         }
+
+        public void Update(Person model) {
+            using var context = new ApplicationDbContext();
+            Person person = context.Persons.FirstOrDefault(x => x.Id == model.Id);
+            if (person != null)
+            {
+                person.FirstName = model.FirstName;
+                person.LastName = model.LastName;
+                person.Address = model.Address;
+                person.Email = model.Email;
+                context.SaveChanges();
+            }
+
+        }
     }
 
 }

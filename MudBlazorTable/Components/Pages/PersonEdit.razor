@@ -1,0 +1,113 @@
+﻿@page "/personsedit"
+@rendermode InteractiveServer
+@using MudBlazorTable.Repositories
+@inject PersonsRepository _personsRepository;
+@using Person = MudBlazorTable.Models.Person;
+
+<MudTable Items="@persons" Hover=true CanCancelEdit=true Filter="new Func<Person, bool>(x=>FilterFunc(x, searchString1))"
+          @bind-SelectedItem="selectedPerson1" SortLabel="Sort By" CommitEditTooltip="Commit Edit" RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
+          ApplyButtonPosition=TableApplyButtonPosition.End EditButtonPosition=TableEditButtonPosition.End EditTrigger=TableEditTrigger.RowClick
+          OnCommitEditClick="@(() => CommitEditClicked(selectedPerson1))">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Persons</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width:50px;" />
+        <col style="width:80px;" />
+        <col style="width:50%;" />
+        <col />
+        <col />
+         <col style="width:50px;" />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.FirstName)">First Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Person, object>(x=>x.LastName)">Last Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Address)">Address</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Person, object>(x=>x.Email)">Email</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="d-none">@context.Id</MudTd>
+        <MudTd DataLabel="First Name">@context.FirstName</MudTd>
+        <MudTd DataLabel="Last Name">@context.LastName</MudTd>
+     <MudTd DataLabel="Address">@context.Address</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="First Name">
+            <MudTextField @bind-Value="context.FirstName" Required />
+        </MudTd>
+        <MudTd DataLabel="Last Name">
+            <MudTextField @bind-Value="context.LastName" Required />
+        </MudTd>
+        <MudTd DataLabel="Address">
+            <MudNumericField @bind-Value="context.Address" Required />
+        </MudTd>
+        <MudTd DataLabel="Email">
+            <MudTextField @bind-Value="context.Email" Required />
+        </MudTd>
+    </RowEditingTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+    <EditButtonContent Context="button">
+        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+    </EditButtonContent>
+</MudTable>
+
+@code {
+    List<Person> persons = new List<Person>();
+    string searchString1;
+    Person selectedItem1;
+    Person personBeforeEdit;
+    Person selectedPerson1 = null;
+    private TableApplyButtonPosition applyButtonPosition = TableApplyButtonPosition.End;
+    private TableEditTrigger editTrigger = TableEditTrigger.RowClick;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+        persons = _personsRepository.Get();
+    }
+
+    void CommitEditClicked(Person person)
+    {
+        _personsRepository.Update(person);
+    }
+
+
+    void BackupItem(object person)
+    {
+        personBeforeEdit = new()
+                {
+                    Id = ((Person)person).Id,
+                    FirstName = ((Person)person).FirstName,
+                    LastName = ((Person)person).LastName,
+                    Address = ((Person)person).Address,
+                    Email = ((Person)person).Email
+                };
+    }
+
+    void ResetItemToOriginalValues(object person)
+    {
+        ((Person)person).FirstName = personBeforeEdit.FirstName;
+        ((Person)person).LastName = personBeforeEdit.LastName;
+        ((Person)person).Address = personBeforeEdit.Address;
+        ((Person)person).Email = personBeforeEdit.Email;
+
+    }
+
+    private bool FilterFunc(Person person, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (person.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (person.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (string.Equals(person.Email, searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+}
