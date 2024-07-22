@@ -3,11 +3,10 @@
 @using MudBlazorTable.Repositories
 @inject PersonsRepository _personsRepository;
 @using Person = MudBlazorTable.Models.Person;
-<h3>Persons</h3>
 
 <MudTable Items="@persons" Filter="new Func<Person, bool>(x=>FilterFunc(x, searchString1))">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Persons</MudText>
+        <MudText Typo="Typo.h6">Persons with Search</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Clearable></MudTextField>
     </ToolBarContent>
@@ -47,6 +46,8 @@
         if (person.FirstName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (person.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (person.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         if (string.Equals(person.Email, searchString, StringComparison.OrdinalIgnoreCase))
             return true;

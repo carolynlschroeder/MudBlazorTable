@@ -9,7 +9,7 @@
           ApplyButtonPosition=TableApplyButtonPosition.End EditButtonPosition=TableEditButtonPosition.End EditTrigger=TableEditTrigger.RowClick
           OnCommitEditClick="@(() => CommitEditClicked(selectedPerson1))">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Persons</MudText>
+        <MudText Typo="Typo.h6">Persons with Edit</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
@@ -62,8 +62,6 @@
     Person selectedItem1;
     Person personBeforeEdit;
     Person selectedPerson1 = null;
-    private TableApplyButtonPosition applyButtonPosition = TableApplyButtonPosition.End;
-    private TableEditTrigger editTrigger = TableEditTrigger.RowClick;
 
     protected override async Task OnInitializedAsync()
     {
